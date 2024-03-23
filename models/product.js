@@ -1,37 +1,53 @@
-const fs = require('fs');
-const path = require('path');
+const Sequelize = require('sequelize');
 
-const p = path.join(
-  path.dirname(process.mainModule.filename),
-  'data',
-  'products.json'
-);
+const sequelize = require('../util/database');
 
-const getProductsFromFile = cb => {
-  fs.readFile(p, (err, fileContent) => {
-    if (err) {
-      cb([]);
-    } else {
-      cb(JSON.parse(fileContent));
-    }
-  });
-};
-
-module.exports = class Product {
-  constructor(t) {
-    this.title = t;
+const Product = sequelize.define('product', {
+  id: {
+    type: Sequelize.INTEGER,
+    autoIncrement: true,
+    allowNull: false,
+    primaryKey: true
+  },
+  title: {
+    type: Sequelize.STRING,
+    allowNull: false,
+  },
+  price: {
+    type: Sequelize.DOUBLE,
+    allowNull: false,
+  },
+  image: {
+    type: Sequelize.STRING,
+    allowNull: false
+  },
+  description: {
+    type: Sequelize.TEXT('long'),
+    allowNull: false
   }
+})
 
-  save() {
-    getProductsFromFile(products => {
-      products.push(this);
-      fs.writeFile(p, JSON.stringify(products), err => {
-        console.log(err);
-      });
-    });
-  }
+module.exports = Product
+// const db = require('../util/database');
 
-  static fetchAll(cb) {
-    getProductsFromFile(cb);
-  }
-};
+// module.exports = class Product {
+//   constructor(title, imageUrl, description, price) {
+//     this.title = title;
+//     this.imageUrl = imageUrl;
+//     this.description = description;
+//     this.price = price;
+//   }
+
+//   save() {
+//     return db.execute('INSERT INTO products (title,price,description,image) VALUES (?,?,?,?)', [this.title, this.price, this.description, this.imageUrl]);
+//   }
+
+//   static fetchAll() {
+//     return db.execute('SELECT * FROM products');
+//   }
+
+//   static findById(id) {
+//     return db.execute('SELECT * FROM products WHERE id_prod=?', [id]);
+//   }
+
+// };
