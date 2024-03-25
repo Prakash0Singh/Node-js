@@ -38,7 +38,6 @@ exports.postAddProduct = (req, res, next) => {
 
 exports.getProducts = (req, res, next) => {
   req.user.getProducts()
-    // Product.findAll()
     .then((product) => {
       res.status(200).send(
         {
@@ -115,6 +114,7 @@ exports.postEditProduct = (req, res, next) => {
     });
 
 }
+
 exports.postDeleteProduct = (req, res, next) => {
   const prodId = req.params.productId;
   Product.destroy({
@@ -123,7 +123,6 @@ exports.postDeleteProduct = (req, res, next) => {
     },
   })
     .then((updated) => {
-      // res.redirect('/');
       res.status(200).send({
         status: true,
         data: updated,
